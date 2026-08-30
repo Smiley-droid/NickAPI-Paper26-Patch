@@ -24,7 +24,28 @@ jobs:
           cache: maven
 
       - name: Compilation de NickPlugin.java (patché) uniquement
-        run: mvn -B -ntp clean compile
+        id: build
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          mvn -B -ntp clean compile 2>&1 | tee build.log
+
+      - name: Publication du log en cas d'échec (diagnostic)
+        if: steps.build.outcome == 'failure'
+        run: |
+          mkdir -p build-logs
+          cp build.log "build-logs/${{ github.run_id }}.log"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan "ci-logs/${{ github.run_id }}"
+          git rm -rf --cached . > /dev/null 2>&1 || true
+          git add "build-logs/${{ github.run_id }}.log"
+          git commit -q -m "CI log run ${{ github.run_id }}"
+          git push origin "HEAD:refs/heads/ci-logs/${{ github.run_id }}"
+
+      - name: Échec si la compilation a échoué
+        if: steps.build.outcome == 'failure'
+        run: exit 1
 
       - name: Injection de la classe patchée dans une copie du jar original
         run: |
