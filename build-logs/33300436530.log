@@ -1,0 +1,169 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for fr.arcane:nickapi-paper26-patch:jar:1.0.0
+[WARNING] 'dependencies.dependency.systemPath' for xyz.haoshoku.nick:nickapi-original:jar should not point at files within the project directory, ${project.basedir}/original-jar/NickAPI-7.11-original.jar will be unresolvable by dependent projects @ line 58, column 25
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ------------------< fr.arcane:nickapi-paper26-patch >-------------------
+[INFO] Building nickapi-paper26-patch 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ nickapi-paper26-patch ---
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ nickapi-paper26-patch ---
+[INFO] Artifact javax.inject:javax.inject:jar:1 is present in the local repository, but cached from a remote repository ID that is unavailable in current build context, verifying that is downloadable from [central (https://repo.maven.apache.org/maven2, default, releases)]
+[INFO] Artifact javax.inject:javax.inject:jar:1 is present in the local repository, but cached from a remote repository ID that is unavailable in current build context, verifying that is downloadable from [central (https://repo.maven.apache.org/maven2, default, releases)]
+[INFO] skip non existing resourceDirectory /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ nickapi-paper26-patch ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug release 21] to target/classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+[INFO] -------------------------------------------------------------
+[WARNING] COMPILATION WARNING : 
+[INFO] -------------------------------------------------------------
+[WARNING] unknown enum constant org.bukkit.event.EventPriority.LOWEST
+  reason: bad class file: /home/runner/.m2/repository/io/papermc/paper/paper-api/26.2.build.119-stable/paper-api-26.2.build.119-stable.jar(/org/bukkit/event/EventPriority.class)
+    class file has wrong version 69.0, should be 65.0
+    Please remove or make sure it appears in the correct subdirectory of the classpath.
+[WARNING] unknown enum constant org.bukkit.event.EventPriority.LOWEST
+[WARNING] unknown enum constant org.bukkit.event.EventPriority.HIGHEST
+[INFO] 3 warnings 
+[INFO] -------------------------------------------------------------
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[3,18] cannot access org.bukkit.Bukkit
+  bad class file: /home/runner/.m2/repository/io/papermc/paper/paper-api/26.2.build.119-stable/paper-api-26.2.build.119-stable.jar(/org/bukkit/Bukkit.class)
+    class file has wrong version 69.0, should be 65.0
+    Please remove or make sure it appears in the correct subdirectory of the classpath.
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[4,24] cannot access org.bukkit.event.Listener
+  bad class file: /home/runner/.m2/repository/io/papermc/paper/paper-api/26.2.build.119-stable/paper-api-26.2.build.119-stable.jar(/org/bukkit/event/Listener.class)
+    class file has wrong version 69.0, should be 65.0
+    Please remove or make sure it appears in the correct subdirectory of the classpath.
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[5,30] cannot access org.bukkit.plugin.java.JavaPlugin
+  bad class file: /home/runner/.m2/repository/io/papermc/paper/paper-api/26.2.build.119-stable/paper-api-26.2.build.119-stable.jar(/org/bukkit/plugin/java/JavaPlugin.class)
+    class file has wrong version 69.0, should be 65.0
+    Please remove or make sure it appears in the correct subdirectory of the classpath.
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[19,33] cannot find symbol
+  symbol: class JavaPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[30,19] cannot access org.bukkit.plugin.Plugin
+  bad class file: /home/runner/.m2/repository/io/papermc/paper/paper-api/26.2.build.119-stable/paper-api-26.2.build.119-stable.jar(/org/bukkit/plugin/Plugin.class)
+    class file has wrong version 69.0, should be 65.0
+    Please remove or make sure it appears in the correct subdirectory of the classpath.
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[31,11] cannot find symbol
+  symbol: method getConfig()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[32,11] cannot find symbol
+  symbol: method saveDefaultConfig()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[33,37] cannot find symbol
+  symbol: method getConfig()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[34,33] cannot find symbol
+  symbol: method getConfig()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[36,19] incompatible types: xyz.haoshoku.nick.NickPlugin cannot be converted to org.bukkit.plugin.Plugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[40,36] incompatible types: xyz.haoshoku.nick.NickPlugin cannot be converted to org.bukkit.plugin.Plugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[44,11] cannot find symbol
+  symbol: method getLogger()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[59,17] cannot find symbol
+  symbol: method getLogger()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[60,13] cannot find symbol
+  symbol:   variable Bukkit
+  location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[69,24] cannot find symbol
+  symbol:   variable Bukkit
+  location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[71,33] cannot find symbol
+  symbol:   variable Bukkit
+  location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[113,7] cannot find symbol
+  symbol:   class Listener
+  location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[113,34] cannot find symbol
+  symbol:   class Listener
+  location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[115,11] cannot find symbol
+  symbol:   class Listener
+  location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[116,10] cannot find symbol
+  symbol:   variable Bukkit
+  location: class xyz.haoshoku.nick.NickPlugin
+[INFO] 20 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  27.275 s
+[INFO] Finished at: 2026-08-30T07:59:01Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project nickapi-paper26-patch: Compilation failure: Compilation failure: 
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[3,18] cannot access org.bukkit.Bukkit
+[ERROR]   bad class file: /home/runner/.m2/repository/io/papermc/paper/paper-api/26.2.build.119-stable/paper-api-26.2.build.119-stable.jar(/org/bukkit/Bukkit.class)
+[ERROR]     class file has wrong version 69.0, should be 65.0
+[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[4,24] cannot access org.bukkit.event.Listener
+[ERROR]   bad class file: /home/runner/.m2/repository/io/papermc/paper/paper-api/26.2.build.119-stable/paper-api-26.2.build.119-stable.jar(/org/bukkit/event/Listener.class)
+[ERROR]     class file has wrong version 69.0, should be 65.0
+[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[5,30] cannot access org.bukkit.plugin.java.JavaPlugin
+[ERROR]   bad class file: /home/runner/.m2/repository/io/papermc/paper/paper-api/26.2.build.119-stable/paper-api-26.2.build.119-stable.jar(/org/bukkit/plugin/java/JavaPlugin.class)
+[ERROR]     class file has wrong version 69.0, should be 65.0
+[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[19,33] cannot find symbol
+[ERROR]   symbol: class JavaPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[30,19] cannot access org.bukkit.plugin.Plugin
+[ERROR]   bad class file: /home/runner/.m2/repository/io/papermc/paper/paper-api/26.2.build.119-stable/paper-api-26.2.build.119-stable.jar(/org/bukkit/plugin/Plugin.class)
+[ERROR]     class file has wrong version 69.0, should be 65.0
+[ERROR]     Please remove or make sure it appears in the correct subdirectory of the classpath.
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[31,11] cannot find symbol
+[ERROR]   symbol: method getConfig()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[32,11] cannot find symbol
+[ERROR]   symbol: method saveDefaultConfig()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[33,37] cannot find symbol
+[ERROR]   symbol: method getConfig()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[34,33] cannot find symbol
+[ERROR]   symbol: method getConfig()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[36,19] incompatible types: xyz.haoshoku.nick.NickPlugin cannot be converted to org.bukkit.plugin.Plugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[40,36] incompatible types: xyz.haoshoku.nick.NickPlugin cannot be converted to org.bukkit.plugin.Plugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[44,11] cannot find symbol
+[ERROR]   symbol: method getLogger()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[59,17] cannot find symbol
+[ERROR]   symbol: method getLogger()
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[60,13] cannot find symbol
+[ERROR]   symbol:   variable Bukkit
+[ERROR]   location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[69,24] cannot find symbol
+[ERROR]   symbol:   variable Bukkit
+[ERROR]   location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[71,33] cannot find symbol
+[ERROR]   symbol:   variable Bukkit
+[ERROR]   location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[113,7] cannot find symbol
+[ERROR]   symbol:   class Listener
+[ERROR]   location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[113,34] cannot find symbol
+[ERROR]   symbol:   class Listener
+[ERROR]   location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[115,11] cannot find symbol
+[ERROR]   symbol:   class Listener
+[ERROR]   location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/NickPlugin.java:[116,10] cannot find symbol
+[ERROR]   symbol:   variable Bukkit
+[ERROR]   location: class xyz.haoshoku.nick.NickPlugin
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
