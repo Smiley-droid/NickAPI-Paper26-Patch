@@ -77,7 +77,11 @@ jobs:
             net/minecraft/network/protocol/game/ClientGamePacketListener \
             net/minecraft/network/Connection \
             net/minecraft/network/NetworkManager \
+            net/minecraft/network/protocol/BundlePacket \
+            net/minecraft/network/chat/ChatType \
+            net/minecraft/network/chat/SignedMessageBody \
             net/minecraft/server/network/ServerGamePacketListenerImpl \
+            net/minecraft/server/network/ServerCommonPacketListenerImpl \
             net/minecraft/server/network/PlayerConnection \
             net/minecraft/server/level/ServerPlayer \
             net/minecraft/server/players/PlayerList \
@@ -91,9 +95,10 @@ jobs:
           done
           # egalement toutes les classes internes (nested, $...) de ces familles
           cd ../
-          jar tf "$PATCHED_JAR" | grep -E "network/protocol/game/(ClientboundPlayerInfoUpdatePacket|ClientboundPlayerInfoRemovePacket|ClientboundPlayerChatPacket|ClientboundSystemChatPacket|ClientboundBundlePacket|ClientboundAddEntityPacket)\\\$" > nested-list.txt || true
+          jar tf "$PATCHED_JAR" | grep -E "network/protocol/(BundlePacket|game/ClientboundPlayerInfoUpdatePacket|game/ClientboundPlayerInfoRemovePacket|game/ClientboundPlayerChatPacket|game/ClientboundSystemChatPacket|game/ClientboundBundlePacket|game/ClientboundAddEntityPacket)\\\$" > nested-list.txt || true
+          jar tf "$PATCHED_JAR" | grep -E "network/chat/(ChatType|SignedMessageBody)\\\$" >> nested-list.txt || true
           jar tf "$PATCHED_JAR" | grep -E "network/(Connection|NetworkManager)\\\$" >> nested-list.txt || true
-          jar tf "$PATCHED_JAR" | grep -E "server/network/(ServerGamePacketListenerImpl|PlayerConnection)\\\$" >> nested-list.txt || true
+          jar tf "$PATCHED_JAR" | grep -E "server/network/(ServerGamePacketListenerImpl|ServerCommonPacketListenerImpl|PlayerConnection)\\\$" >> nested-list.txt || true
           jar tf "$PATCHED_JAR" | grep -E "server/level/ServerPlayer\\\$" >> nested-list.txt || true
           cat nested-list.txt
           cd extracted
