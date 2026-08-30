@@ -47,8 +47,12 @@ jobs:
 
       - name: Téléchargement de Vineflower (décompilateur)
         run: |
-          curl -s -L -o vineflower.jar \
-            https://github.com/Vineflower/vineflower/releases/latest/download/vineflower.jar
+          set -e
+          ASSET_URL=$(curl -s https://api.github.com/repos/Vineflower/vineflower/releases/latest \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); a=[x for x in d['assets'] if x['name'].endswith('.jar') and 'slim' not in x['name']]; print(a[0]['browser_download_url'])")
+          echo "Asset URL: $ASSET_URL"
+          curl -s -L -o vineflower.jar "$ASSET_URL"
+          file vineflower.jar
           ls -la vineflower.jar
 
       - name: Décompilation
