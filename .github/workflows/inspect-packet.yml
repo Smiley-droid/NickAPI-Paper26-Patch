@@ -67,20 +67,40 @@ jobs:
           jar tf "$PATCHED_JAR" | wc -l
           mkdir -p extracted
           cd extracted
-          jar xf "../$PATCHED_JAR" net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket.class || true
+          for CLASS in \
+            net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket \
+            net/minecraft/network/protocol/game/ClientboundPlayerInfoRemovePacket \
+            net/minecraft/network/protocol/game/ClientboundPlayerChatPacket \
+            net/minecraft/network/protocol/game/ClientboundSystemChatPacket \
+            net/minecraft/network/protocol/game/ClientboundBundlePacket \
+            net/minecraft/network/protocol/game/ClientboundAddEntityPacket \
+            net/minecraft/network/protocol/game/ClientGamePacketListener \
+            net/minecraft/network/Connection \
+            net/minecraft/network/NetworkManager \
+            net/minecraft/server/network/ServerGamePacketListenerImpl \
+            net/minecraft/server/network/PlayerConnection \
+            net/minecraft/server/level/ServerPlayer \
+            net/minecraft/server/players/PlayerList \
+            net/minecraft/server/dedicated/DedicatedPlayerList \
+            net/minecraft/network/chat/RemoteChatSession \
+            net/minecraft/network/chat/Component \
+            org/bukkit/craftbukkit/CraftServer \
+            org/bukkit/craftbukkit/entity/CraftPlayer \
+          ; do
+            jar xf "../$PATCHED_JAR" "$CLASS.class" 2>/dev/null && echo "OK: $CLASS" || echo "absent: $CLASS"
+          done
+          # egalement toutes les classes internes (nested, $...) de ces familles
           cd ../
-          jar tf "$PATCHED_JAR" | grep -i "PlayerInfo" > pkg-list.txt || true
-          echo "--- PlayerInfo matches ---"
-          cat pkg-list.txt
-          jar tf "$PATCHED_JAR" | grep "network/protocol/game/Clientbound" > all-clientbound-game.txt || true
-          echo "--- total clientbound game packets ---"
-          wc -l all-clientbound-game.txt
+          jar tf "$PATCHED_JAR" | grep -E "network/protocol/game/(ClientboundPlayerInfoUpdatePacket|ClientboundPlayerInfoRemovePacket|ClientboundPlayerChatPacket|ClientboundSystemChatPacket|ClientboundBundlePacket|ClientboundAddEntityPacket)\\\$" > nested-list.txt || true
+          jar tf "$PATCHED_JAR" | grep -E "network/(Connection|NetworkManager)\\\$" >> nested-list.txt || true
+          jar tf "$PATCHED_JAR" | grep -E "server/network/(ServerGamePacketListenerImpl|PlayerConnection)\\\$" >> nested-list.txt || true
+          jar tf "$PATCHED_JAR" | grep -E "server/level/ServerPlayer\\\$" >> nested-list.txt || true
+          cat nested-list.txt
           cd extracted
           while read -r entry; do
             jar xf "../$PATCHED_JAR" "$entry" || true
-          done < ../pkg-list.txt
+          done < ../nested-list.txt
           find . -type f
-          cp "$PATCHED_JAR" ../patched-server.jar
           } 2>&1 | tee extract.log
 
       - name: Publication du log d'extraction (diagnostic)
@@ -145,9 +165,7 @@ jobs:
           git rm -rf --cached . > /dev/null 2>&1 || true
           mkdir -p inspect-output
           cp -r decompiled/* inspect-output/ 2>/dev/null || true
-          cp pkg-list.txt inspect-output/ 2>/dev/null || true
-          cp all-clientbound-game.txt inspect-output/ 2>/dev/null || true
-          jar tf paper-26.2-112.jar > inspect-output/full-jar-listing.txt 2>/dev/null || true
+          cp nested-list.txt inspect-output/ 2>/dev/null || true
           git add inspect-output
           git commit -q -m "Inspection paquet run ${{ github.run_id }}"
           git push origin "HEAD:refs/heads/packet-inspect/${{ github.run_id }}"
