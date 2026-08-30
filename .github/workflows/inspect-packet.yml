@@ -35,10 +35,13 @@ jobs:
           mkdir -p extracted
           cd extracted
           jar xf ../paper-26.2-112.jar net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket.class || true
-          # Extrait aussi toutes les classes internes (nested) de ce paquet
           cd ../
-          jar tf paper-26.2-112.jar | grep "ClientboundPlayerInfoUpdatePacket" > pkg-list.txt || true
+          jar tf paper-26.2-112.jar | grep -i "PlayerInfo" > pkg-list.txt || true
+          echo "--- PlayerInfo matches ---"
           cat pkg-list.txt
+          jar tf paper-26.2-112.jar | grep "network/protocol/game/Clientbound" > all-clientbound-game.txt || true
+          echo "--- total clientbound game packets ---"
+          wc -l all-clientbound-game.txt
           cd extracted
           while read -r entry; do
             jar xf ../paper-26.2-112.jar "$entry" || true
@@ -61,7 +64,11 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p decompiled
-          java -jar vineflower.jar extracted decompiled 2>&1 | tee decompile.log
+          if [ -z "$(find extracted -type f)" ]; then
+            echo "Aucun fichier extrait, on saute la decompilation." | tee decompile.log
+          else
+            java -jar vineflower.jar extracted decompiled 2>&1 | tee decompile.log
+          fi
           find decompiled -type f
 
       - name: Publication du log en cas d'échec
@@ -91,6 +98,7 @@ jobs:
           mkdir -p inspect-output
           cp -r decompiled/* inspect-output/ 2>/dev/null || true
           cp pkg-list.txt inspect-output/ 2>/dev/null || true
+          cp all-clientbound-game.txt inspect-output/ 2>/dev/null || true
           git add inspect-output
           git commit -q -m "Inspection paquet run ${{ github.run_id }}"
           git push origin "HEAD:refs/heads/packet-inspect/${{ github.run_id }}"
