@@ -1,0 +1,8 @@
+net/minecraft/network/protocol/game/ClientboundPlayerInfoRemovePacket.class
+net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket$Action$Reader.class
+net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket$Action$Writer.class
+net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket$Action.class
+net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket$Entry.class
+net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket$EntryBuilder.class
+net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket.class
+net/minecraft/network/protocol/login/ClientboundCustomQueryPacket$PlayerInfoChannelPayload.class
