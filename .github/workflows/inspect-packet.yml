@@ -46,12 +46,21 @@ jobs:
           find versions -type f 2>/dev/null
 
       - name: Extraction des classes du paquet
+        id: extract
+        continue-on-error: true
         run: |
-          PATCHED_JAR=$(find rundir/cache rundir/versions -type f -name "*.jar" 2>/dev/null | xargs -I{} sh -c 'echo "{}: $(jar tf "{}" | wc -l) entries"' | sort -t: -k2 -n -r | head -1 | cut -d: -f1)
+          set -o pipefail
+          {
+          echo "--- find rundir (tout) ---"
+          find rundir -maxdepth 4 -type d
+          echo "--- tous les .jar sous rundir ---"
+          find rundir -type f -name "*.jar"
+          PATCHED_JAR=$(find rundir/cache rundir/versions -type f -name "*.jar" 2>/dev/null | while read -r f; do
+            echo "$(jar tf "$f" 2>/dev/null | wc -l) $f"
+          done | sort -n -r | head -1 | awk '{print $2}')
           echo "Jar patché détecté : $PATCHED_JAR"
           if [ -z "$PATCHED_JAR" ]; then
             echo "Aucun jar patché trouvé !"
-            find rundir -type f -name "*.jar"
             exit 0
           fi
           echo "--- Nombre total d'entrees ---"
@@ -72,6 +81,20 @@ jobs:
           done < ../pkg-list.txt
           find . -type f
           cp "$PATCHED_JAR" ../patched-server.jar
+          } 2>&1 | tee extract.log
+
+      - name: Publication du log d'extraction (diagnostic)
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan "extract-log/${{ github.run_id }}"
+          git rm -rf --cached . > /dev/null 2>&1 || true
+          mkdir -p log-output
+          cp extract.log log-output/ 2>/dev/null || true
+          git add log-output
+          git commit -q -m "Log extraction run ${{ github.run_id }}" || echo "rien a committer"
+          git push origin "HEAD:refs/heads/extract-log/${{ github.run_id }}" || echo "rien a push"
 
       - name: Téléchargement de Vineflower (décompilateur)
         run: |
