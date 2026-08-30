@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.arcane</groupId>
+    <artifactId>nickapi-paper26-patch</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>${java.version}</release>
+                </configuration>
+            </plugin>
+            <!-- On ne veut PAS de jar final "normal" : seule la classe compilee
+                 nous interesse (target/classes/xyz/haoshoku/nick/NickPlugin.class),
+                 elle sera injectee manuellement dans une copie du jar original. -->
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Pour JavaPlugin, Bukkit, Listener : API standard, aucun acces NMS
+             obfusque dans NickPlugin.java, donc aucun besoin de BuildTools/remapping ici. -->
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>26.2.build.119-stable</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Le jar original (fourni par l'utilisateur) : donne acces aux classes
+             qu'importe NickPlugin.java (Handler_v1_21_R7, NickConfig, Metrics, etc.)
+             SANS les recompiler - on garde leur bytecode original intact. -->
+        <dependency>
+            <groupId>xyz.haoshoku.nick</groupId>
+            <artifactId>nickapi-original</artifactId>
+            <version>7.11</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/original-jar/NickAPI-7.11-original.jar</systemPath>
+        </dependency>
+    </dependencies>
+</project>
