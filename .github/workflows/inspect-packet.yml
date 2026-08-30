@@ -32,6 +32,12 @@ jobs:
 
       - name: Extraction des classes du paquet
         run: |
+          echo "--- Nombre total d'entrees dans le jar ---"
+          jar tf paper-26.2-112.jar | wc -l
+          echo "--- Racine du jar ---"
+          jar tf paper-26.2-112.jar | awk -F/ '{print $1}' | sort -u | head -30
+          echo "--- Contenu META-INF/versions (paperclip ?) ---"
+          jar tf paper-26.2-112.jar | grep "META-INF/versions" | head -20
           mkdir -p extracted
           cd extracted
           jar xf ../paper-26.2-112.jar net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket.class || true
@@ -99,6 +105,7 @@ jobs:
           cp -r decompiled/* inspect-output/ 2>/dev/null || true
           cp pkg-list.txt inspect-output/ 2>/dev/null || true
           cp all-clientbound-game.txt inspect-output/ 2>/dev/null || true
+          jar tf paper-26.2-112.jar > inspect-output/full-jar-listing.txt 2>/dev/null || true
           git add inspect-output
           git commit -q -m "Inspection paquet run ${{ github.run_id }}"
           git push origin "HEAD:refs/heads/packet-inspect/${{ github.run_id }}"
