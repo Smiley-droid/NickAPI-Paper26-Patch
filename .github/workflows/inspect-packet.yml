@@ -52,10 +52,31 @@ jobs:
           ls -la vineflower.jar
 
       - name: Décompilation
+        id: decompile
+        continue-on-error: true
         run: |
+          set -o pipefail
           mkdir -p decompiled
-          java -jar vineflower.jar extracted decompiled
+          java -jar vineflower.jar extracted decompiled 2>&1 | tee decompile.log
           find decompiled -type f
+
+      - name: Publication du log en cas d'échec
+        if: steps.decompile.outcome == 'failure'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan "decompile-log/${{ github.run_id }}"
+          git rm -rf --cached . > /dev/null 2>&1 || true
+          mkdir -p log-output
+          cp decompile.log log-output/ 2>/dev/null || true
+          find extracted -type f > log-output/extracted-files.txt
+          git add log-output
+          git commit -q -m "Log decompile run ${{ github.run_id }}"
+          git push origin "HEAD:refs/heads/decompile-log/${{ github.run_id }}"
+
+      - name: Échec si la décompilation a échoué
+        if: steps.decompile.outcome == 'failure'
+        run: exit 1
 
       - name: Publication sur une branche dédiée
         run: |
