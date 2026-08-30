@@ -30,29 +30,48 @@ jobs:
           curl -s -L -o paper-26.2-112.jar "$URL"
           ls -la paper-26.2-112.jar
 
+      - name: Génération du jar patché (premier démarrage paperclip)
+        run: |
+          set -e
+          mkdir -p rundir
+          cp paper-26.2-112.jar rundir/
+          cd rundir
+          echo "eula=true" > eula.txt
+          # Le paperclip télécharge + patche le jar Mojang au premier lancement,
+          # puis démarre le serveur. On le laisse patcher, puis on l'arrête.
+          (echo "stop"; sleep 120; ) | timeout 180 java -jar paper-26.2-112.jar --nogui || true
+          echo "--- Contenu de cache/ ---"
+          find cache -type f 2>/dev/null
+          echo "--- Contenu de versions/ ---"
+          find versions -type f 2>/dev/null
+
       - name: Extraction des classes du paquet
         run: |
-          echo "--- Nombre total d'entrees dans le jar ---"
-          jar tf paper-26.2-112.jar | wc -l
-          echo "--- Racine du jar ---"
-          jar tf paper-26.2-112.jar | awk -F/ '{print $1}' | sort -u | head -30
-          echo "--- Contenu META-INF/versions (paperclip ?) ---"
-          jar tf paper-26.2-112.jar | grep "META-INF/versions" | head -20
+          PATCHED_JAR=$(find rundir/cache rundir/versions -type f -name "*.jar" 2>/dev/null | xargs -I{} sh -c 'echo "{}: $(jar tf "{}" | wc -l) entries"' | sort -t: -k2 -n -r | head -1 | cut -d: -f1)
+          echo "Jar patché détecté : $PATCHED_JAR"
+          if [ -z "$PATCHED_JAR" ]; then
+            echo "Aucun jar patché trouvé !"
+            find rundir -type f -name "*.jar"
+            exit 0
+          fi
+          echo "--- Nombre total d'entrees ---"
+          jar tf "$PATCHED_JAR" | wc -l
           mkdir -p extracted
           cd extracted
-          jar xf ../paper-26.2-112.jar net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket.class || true
+          jar xf "../$PATCHED_JAR" net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket.class || true
           cd ../
-          jar tf paper-26.2-112.jar | grep -i "PlayerInfo" > pkg-list.txt || true
+          jar tf "$PATCHED_JAR" | grep -i "PlayerInfo" > pkg-list.txt || true
           echo "--- PlayerInfo matches ---"
           cat pkg-list.txt
-          jar tf paper-26.2-112.jar | grep "network/protocol/game/Clientbound" > all-clientbound-game.txt || true
+          jar tf "$PATCHED_JAR" | grep "network/protocol/game/Clientbound" > all-clientbound-game.txt || true
           echo "--- total clientbound game packets ---"
           wc -l all-clientbound-game.txt
           cd extracted
           while read -r entry; do
-            jar xf ../paper-26.2-112.jar "$entry" || true
+            jar xf "../$PATCHED_JAR" "$entry" || true
           done < ../pkg-list.txt
           find . -type f
+          cp "$PATCHED_JAR" ../patched-server.jar
 
       - name: Téléchargement de Vineflower (décompilateur)
         run: |
