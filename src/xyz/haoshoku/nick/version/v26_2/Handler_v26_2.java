@@ -216,17 +216,16 @@ public class Handler_v26_2 implements VersionHandler {
          DedicatedPlayerList playerList = ((CraftServer) Bukkit.getServer()).getHandle();
          serverPlayer.connection.send(removeInfoPacket);
          serverPlayer.connection.send(updateInfoPacket);
-         if (!this.isPaper) {
-            // Le parametre Location a ete retire de PlayerList#respawn depuis 1.21.11.
-            playerList.respawn(serverPlayer, true, RemovalReason.CHANGED_DIMENSION, RespawnReason.PLUGIN);
-         } else {
-            try {
-               Method refreshPlayerMethod = craftPlayer.getClass().getDeclaredMethod("refreshPlayer");
-               refreshPlayerMethod.setAccessible(true);
-               refreshPlayerMethod.invoke(player);
-            } catch (Exception var17) {
-            }
-         }
+         // On force systematiquement un respawn NMS complet : c'est ce qui force
+         // TOUS les autres clients a re-dessiner le modele du joueur (entite
+         // retiree puis recreee avec le nouveau GameProfile). L'ancienne version
+         // (Handler_v1_21_R7) utilisait plutot un appel reflexif a la methode
+         // privee CraftPlayer#refreshPlayer() sur Paper, mais cet appel echoue
+         // silencieusement sur 26.2 (exception avalee par un catch generique),
+         // ce qui laissait l'entite jamais rafraichie pour les joueurs non
+         // deguises - exactement le symptome observe (visible en tab-list/chat
+         // mais invisible physiquement pour les autres joueurs).
+         playerList.respawn(serverPlayer, true, RemovalReason.CHANGED_DIMENSION, RespawnReason.PLUGIN);
 
          for (Player online : Bukkit.getOnlinePlayers()) {
             if (online != player && online.canSee(player)) {
