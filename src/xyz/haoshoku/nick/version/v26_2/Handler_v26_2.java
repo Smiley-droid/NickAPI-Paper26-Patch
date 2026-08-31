@@ -117,10 +117,23 @@ public class Handler_v26_2 implements VersionHandler {
                         UUID uuid = (UUID) ReflectionUtils.getField(addEntityPacket, "uuid");
                         NickUser receivedUser = UserHandler.getUser(uuid);
                         NickUser playerUser = UserHandler.getUser(player.getUniqueId());
+                        Handler_v26_2.this.plugin.getLogger().info("[DEBUG] write(): ClientboundAddEntityPacket dans un bundle, uuid=" + uuid
+                              + " receivedUser=" + (receivedUser != null) + " nickedUuid=" + (receivedUser != null ? receivedUser.getNickedUniqueId() : "null"));
                         if (playerUser != null && receivedUser != null && receivedUser.getNickedUniqueId() != null && !playerUser.getBypassNickSet().contains(uuid)) {
                            ReflectionUtils.setField(addEntityPacket, "uuid", receivedUser.getNickedUniqueId());
+                           Handler_v26_2.this.plugin.getLogger().info("[DEBUG] write(): UUID reecrit " + uuid + " -> " + receivedUser.getNickedUniqueId() + " pour observateur " + player.getName());
                         }
                      }
+                  }
+               } else if (packet instanceof ClientboundAddEntityPacket addEntityPacketDirect) {
+                  UUID uuid = (UUID) ReflectionUtils.getField(addEntityPacketDirect, "uuid");
+                  NickUser receivedUser = UserHandler.getUser(uuid);
+                  NickUser playerUser = UserHandler.getUser(player.getUniqueId());
+                  Handler_v26_2.this.plugin.getLogger().info("[DEBUG] write(): ClientboundAddEntityPacket direct (hors bundle), uuid=" + uuid
+                        + " receivedUser=" + (receivedUser != null) + " nickedUuid=" + (receivedUser != null ? receivedUser.getNickedUniqueId() : "null"));
+                  if (playerUser != null && receivedUser != null && receivedUser.getNickedUniqueId() != null && !playerUser.getBypassNickSet().contains(uuid)) {
+                     ReflectionUtils.setField(addEntityPacketDirect, "uuid", receivedUser.getNickedUniqueId());
+                     Handler_v26_2.this.plugin.getLogger().info("[DEBUG] write(): UUID reecrit (direct) " + uuid + " -> " + receivedUser.getNickedUniqueId() + " pour observateur " + player.getName());
                   }
                }
 
@@ -149,6 +162,8 @@ public class Handler_v26_2 implements VersionHandler {
                               packetValue = receivedUser.getNickedValue();
                               packetSignature = receivedUser.getNickedSignature();
                            }
+                           Handler_v26_2.this.plugin.getLogger().info("[DEBUG] write(): ClientboundPlayerInfoUpdatePacket entry reecrite pour observateur "
+                                 + player.getName() + " : " + entry.profileId() + " -> " + packetUniqueId + " (" + packetName + ")");
 
                            LinkedListMultimap<String, Property> properties = LinkedListMultimap.create();
                            properties.put("textures", new Property("textures", packetValue, packetSignature));
@@ -171,6 +186,7 @@ public class Handler_v26_2 implements VersionHandler {
       };
       ChannelPipeline pipeline = this.pipeline(player);
       pipeline.addBefore("packet_handler", "nickapi", duplexHandler);
+      this.plugin.getLogger().info("[DEBUG] inject(): handler nickapi injecte dans le pipeline de " + player.getName());
    }
 
    public void sendPacket(Player player) {
@@ -216,21 +232,13 @@ public class Handler_v26_2 implements VersionHandler {
          DedicatedPlayerList playerList = ((CraftServer) Bukkit.getServer()).getHandle();
          serverPlayer.connection.send(removeInfoPacket);
          serverPlayer.connection.send(updateInfoPacket);
-         // On force systematiquement un respawn NMS complet : c'est ce qui force
-         // TOUS les autres clients a re-dessiner le modele du joueur (entite
-         // retiree puis recreee avec le nouveau GameProfile). L'ancienne version
-         // (Handler_v1_21_R7) utilisait plutot un appel reflexif a la methode
-         // privee CraftPlayer#refreshPlayer() sur Paper, mais cet appel echoue
-         // silencieusement sur 26.2 (exception avalee par un catch generique),
-         // ce qui laissait l'entite jamais rafraichie pour les joueurs non
-         // deguises - exactement le symptome observe (visible en tab-list/chat
-         // mais invisible physiquement pour les autres joueurs).
-         playerList.respawn(serverPlayer, true, RemovalReason.CHANGED_DIMENSION, RespawnReason.PLUGIN);
+         this.plugin.getLogger().info("[DEBUG] sendPacket: entete tab envoyee pour " + player.getName() + " -> uuid affiche=" + user.getNickedUniqueId());
 
          for (Player online : Bukkit.getOnlinePlayers()) {
             if (online != player && online.canSee(player)) {
                online.hidePlayer(this.plugin, player);
                online.showPlayer(this.plugin, player);
+               this.plugin.getLogger().info("[DEBUG] hidePlayer/showPlayer applique pour " + online.getName() + " voyant " + player.getName());
             }
          }
 
