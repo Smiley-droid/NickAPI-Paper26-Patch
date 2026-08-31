@@ -84,5 +84,14 @@
             <version>9.0.75</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Netty (io.netty.channel.*), utilise directement par le handler pour
+             l'injection dans le pipeline reseau. Le jar serveur reel ne l'embarque
+             pas (il vient d'une lib externe chargee au demarrage). -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.2.15.Final</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
