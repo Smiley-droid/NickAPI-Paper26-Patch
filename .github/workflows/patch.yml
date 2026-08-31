@@ -23,12 +23,37 @@ jobs:
           java-version: '25'
           cache: maven
 
-      - name: Compilation de NickPlugin.java (patché) uniquement
+      - name: Téléchargement du jar officiel Paper 26.2 build 112
+        run: |
+          set -e
+          URL=$(curl -s -H "User-Agent: nickapi-patch-build" \
+            https://fill.papermc.io/v3/projects/paper/versions/26.2/builds/112 \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['downloads']['server:default']['url'])")
+          echo "Download URL: $URL"
+          curl -s -L -o paper-26.2-112.jar "$URL"
+          ls -la paper-26.2-112.jar
+
+      - name: Génération du vrai jar serveur (bootstrap paperclip)
+        run: |
+          set -e
+          mkdir -p rundir
+          cp paper-26.2-112.jar rundir/
+          cd rundir
+          echo "eula=true" > eula.txt
+          (echo "stop"; sleep 120; ) | timeout 180 java -jar paper-26.2-112.jar --nogui || true
+          cd ..
+          mkdir -p original-jar
+          cp rundir/versions/26.2/paper-26.2.jar original-jar/paper-26.2-server.jar
+          ls -la original-jar/paper-26.2-server.jar
+
+      - name: Compilation de NickPlugin.java + Handler_v26_2.java
         id: build
         continue-on-error: true
         run: |
           set -o pipefail
           mvn -B -ntp clean compile 2>&1 | tee build.log
+          echo "--- Classes compilées ---"
+          find target/classes -name "*.class"
 
       - name: Publication du log en cas d'échec (diagnostic)
         if: steps.build.outcome == 'failure'
@@ -47,18 +72,17 @@ jobs:
         if: steps.build.outcome == 'failure'
         run: exit 1
 
-      - name: Injection de la classe patchée dans une copie du jar original
+      - name: Injection des classes patchées dans une copie du jar original
         run: |
           set -e
           mkdir -p output
           cp original-jar/NickAPI-7.11-original.jar output/NickAPI-7.11-paper26.jar
-          # jar update: remplace uniquement xyz/haoshoku/nick/NickPlugin.class,
-          # tout le reste du jar (handlers NMS, httpclient5, etc.) reste inchangé.
           cd target/classes
           jar uf ../../output/NickAPI-7.11-paper26.jar xyz/haoshoku/nick/NickPlugin.class
+          find xyz/haoshoku/nick/version/v26_2 -name "*.class" -print0 | xargs -0 jar uf ../../output/NickAPI-7.11-paper26.jar
           cd ../..
           echo "Contenu vérifié :"
-          unzip -p output/NickAPI-7.11-paper26.jar xyz/haoshoku/nick/NickPlugin.class | wc -c
+          unzip -l output/NickAPI-7.11-paper26.jar | grep -E "NickPlugin.class|v26_2"
 
       - name: Upload de l'artifact
         uses: actions/upload-artifact@v4

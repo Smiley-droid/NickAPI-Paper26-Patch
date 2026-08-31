@@ -57,5 +57,32 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/original-jar/NickAPI-7.11-original.jar</systemPath>
         </dependency>
+        <!-- Le vrai jar serveur Paper 26.2 (mojang-mappe, classes NMS reelles),
+             genere en CI via un bootstrap paperclip - necessaire pour compiler
+             Handler_v26_2.java qui touche directement aux classes net.minecraft.*. -->
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-server-real</artifactId>
+            <version>26.2-112</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/original-jar/paper-26.2-server.jar</systemPath>
+        </dependency>
+        <!-- Google Guava, necessaire pour LinkedListMultimap utilise par le handler
+             (deja fourni transitivement par le serveur a l'execution, mais requis ici
+             pour la compilation). -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.6.0-jre</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- com.mojang.authlib.GameProfile / Property / PropertyMap, utilises
+             directement par le handler. -->
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
+            <version>9.0.75</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
