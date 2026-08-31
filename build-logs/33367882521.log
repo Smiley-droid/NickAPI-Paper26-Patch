@@ -1,0 +1,95 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for fr.arcane:nickapi-paper26-patch:jar:1.0.0
+[WARNING] 'dependencies.dependency.systemPath' for xyz.haoshoku.nick:nickapi-original:jar should not point at files within the project directory, ${project.basedir}/original-jar/NickAPI-7.11-original.jar will be unresolvable by dependent projects @ line 58, column 25
+[WARNING] 'dependencies.dependency.systemPath' for io.papermc.paper:paper-server-real:jar should not point at files within the project directory, ${project.basedir}/original-jar/paper-26.2-server.jar will be unresolvable by dependent projects @ line 68, column 25
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ------------------< fr.arcane:nickapi-paper26-patch >-------------------
+[INFO] Building nickapi-paper26-patch 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ nickapi-paper26-patch ---
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ nickapi-paper26-patch ---
+[INFO] Artifact javax.inject:javax.inject:jar:1 is present in the local repository, but cached from a remote repository ID that is unavailable in current build context, verifying that is downloadable from [central (https://repo.maven.apache.org/maven2, default, releases)]
+[INFO] Artifact javax.inject:javax.inject:jar:1 is present in the local repository, but cached from a remote repository ID that is unavailable in current build context, verifying that is downloadable from [central (https://repo.maven.apache.org/maven2, default, releases)]
+[INFO] skip non existing resourceDirectory /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ nickapi-paper26-patch ---
+[INFO] Artifact commons-io:commons-io:jar:2.11.0 is present in the local repository, but cached from a remote repository ID that is unavailable in current build context, verifying that is downloadable from [central (https://repo.maven.apache.org/maven2, default, releases), plexus.snapshots (https://oss.sonatype.org/content/repositories/plexus-snapshots, default, snapshots), apache.snapshots (https://repository.apache.org/snapshots, default, snapshots)]
+[INFO] Artifact commons-io:commons-io:jar:2.11.0 is present in the local repository, but cached from a remote repository ID that is unavailable in current build context, verifying that is downloadable from [central (https://repo.maven.apache.org/maven2, default, releases), plexus.snapshots (https://oss.sonatype.org/content/repositories/plexus-snapshots, default, snapshots), apache.snapshots (https://repository.apache.org/snapshots, default, snapshots)]
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 2 source files with javac [debug release 25] to target/classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[7,24] package io.netty.channel does not exist
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[8,24] package io.netty.channel does not exist
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[9,24] package io.netty.channel does not exist
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[10,24] package io.netty.channel does not exist
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[243,12] cannot find symbol
+  symbol:   class ChannelPipeline
+  location: class xyz.haoshoku.nick.version.v26_2.Handler_v26_2
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[104,7] cannot find symbol
+  symbol:   class ChannelDuplexHandler
+  location: class xyz.haoshoku.nick.version.v26_2.Handler_v26_2
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[104,48] cannot find symbol
+  symbol:   class ChannelDuplexHandler
+  location: class xyz.haoshoku.nick.version.v26_2.Handler_v26_2
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[105,28] cannot find symbol
+  symbol: class ChannelHandlerContext
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[105,70] cannot find symbol
+  symbol: class ChannelPromise
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[172,7] cannot find symbol
+  symbol:   class ChannelPipeline
+  location: class xyz.haoshoku.nick.version.v26_2.Handler_v26_2
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/original-jar/paper-26.2-server.jar(/net/minecraft/network/FriendlyByteBuf.class): error: Cannot attach type annotations @org.jspecify.annotations.Nullable to net.minecraft.network.FriendlyByteBuf.readNullable:
+  class file for io.netty.buffer.ByteBuf not found
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[245,56] cannot access io.netty.channel.Channel
+  class file for io.netty.channel.Channel not found
+[INFO] 12 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  23.188 s
+[INFO] Finished at: 2026-08-31T07:23:14Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project nickapi-paper26-patch: Compilation failure: Compilation failure: 
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[7,24] package io.netty.channel does not exist
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[8,24] package io.netty.channel does not exist
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[9,24] package io.netty.channel does not exist
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[10,24] package io.netty.channel does not exist
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[243,12] cannot find symbol
+[ERROR]   symbol:   class ChannelPipeline
+[ERROR]   location: class xyz.haoshoku.nick.version.v26_2.Handler_v26_2
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[104,7] cannot find symbol
+[ERROR]   symbol:   class ChannelDuplexHandler
+[ERROR]   location: class xyz.haoshoku.nick.version.v26_2.Handler_v26_2
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[104,48] cannot find symbol
+[ERROR]   symbol:   class ChannelDuplexHandler
+[ERROR]   location: class xyz.haoshoku.nick.version.v26_2.Handler_v26_2
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[105,28] cannot find symbol
+[ERROR]   symbol: class ChannelHandlerContext
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[105,70] cannot find symbol
+[ERROR]   symbol: class ChannelPromise
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[172,7] cannot find symbol
+[ERROR]   symbol:   class ChannelPipeline
+[ERROR]   location: class xyz.haoshoku.nick.version.v26_2.Handler_v26_2
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/original-jar/paper-26.2-server.jar(/net/minecraft/network/FriendlyByteBuf.class): error: Cannot attach type annotations @org.jspecify.annotations.Nullable to net.minecraft.network.FriendlyByteBuf.readNullable:
+[ERROR]   class file for io.netty.buffer.ByteBuf not found
+[ERROR] /home/runner/work/NickAPI-Paper26-Patch/NickAPI-Paper26-Patch/src/xyz/haoshoku/nick/version/v26_2/Handler_v26_2.java:[245,56] cannot access io.netty.channel.Channel
+[ERROR]   class file for io.netty.channel.Channel not found
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
