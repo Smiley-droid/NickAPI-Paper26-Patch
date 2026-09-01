@@ -100,6 +100,37 @@ public class Handler_v26_2 implements VersionHandler {
       }
    }
 
+   /**
+    * Determine le UUID a utiliser reellement pour representer le joueur deguise
+    * aux yeux d'un observateur, en evitant toute collision avec un joueur REELLEMENT
+    * en ligne au meme moment.
+    *
+    * Probleme reel observe : NickAPI attribue au deguisement le vrai UUID Mojang
+    * du joueur imite (ex: Asy_AI3m se deguise en Smiley_53 -> recoit le VRAI UUID
+    * de Smiley_53). Si Smiley_53 est lui-meme connecte en meme temps, deux entites
+    * portent alors exactement le meme UUID sur le serveur - le client Minecraft de
+    * la personne imitee ignore/rejette silencieusement le doublon, rendant le
+    * joueur deguise invisible a SES yeux precisement (mais visible pour les autres).
+    *
+    * On retombe alors sur le vrai UUID (unique par definition) du joueur deguise
+    * lui-meme, en gardant le nom/la texture usurpes - aucune collision possible
+    * puisque chaque joueur en ligne a un UUID reel forcement distinct des autres.
+    */
+   private UUID resolveSafeUuid(UUID candidateUuid, UUID realOwnerUuid) {
+      if (candidateUuid == null) {
+         return realOwnerUuid;
+      }
+      if (candidateUuid.equals(realOwnerUuid)) {
+         return candidateUuid;
+      }
+      for (Player online : Bukkit.getOnlinePlayers()) {
+         if (online.getUniqueId().equals(candidateUuid)) {
+            return realOwnerUuid;
+         }
+      }
+      return candidateUuid;
+   }
+
    public void inject(final Player player) {
       ChannelDuplexHandler duplexHandler = new ChannelDuplexHandler() {
          public void write(ChannelHandlerContext ctx, Object packet, ChannelPromise promise) throws Exception {
@@ -117,11 +148,9 @@ public class Handler_v26_2 implements VersionHandler {
                         UUID uuid = (UUID) ReflectionUtils.getField(addEntityPacket, "uuid");
                         NickUser receivedUser = UserHandler.getUser(uuid);
                         NickUser playerUser = UserHandler.getUser(player.getUniqueId());
-                        Handler_v26_2.this.plugin.getLogger().info("[DEBUG] write(): ClientboundAddEntityPacket dans un bundle, uuid=" + uuid
-                              + " receivedUser=" + (receivedUser != null) + " nickedUuid=" + (receivedUser != null ? receivedUser.getNickedUniqueId() : "null"));
                         if (playerUser != null && receivedUser != null && receivedUser.getNickedUniqueId() != null && !playerUser.getBypassNickSet().contains(uuid)) {
-                           ReflectionUtils.setField(addEntityPacket, "uuid", receivedUser.getNickedUniqueId());
-                           Handler_v26_2.this.plugin.getLogger().info("[DEBUG] write(): UUID reecrit " + uuid + " -> " + receivedUser.getNickedUniqueId() + " pour observateur " + player.getName());
+                           UUID safeUuid = Handler_v26_2.this.resolveSafeUuid(receivedUser.getNickedUniqueId(), uuid);
+                           ReflectionUtils.setField(addEntityPacket, "uuid", safeUuid);
                         }
                      }
                   }
@@ -129,11 +158,9 @@ public class Handler_v26_2 implements VersionHandler {
                   UUID uuid = (UUID) ReflectionUtils.getField(addEntityPacketDirect, "uuid");
                   NickUser receivedUser = UserHandler.getUser(uuid);
                   NickUser playerUser = UserHandler.getUser(player.getUniqueId());
-                  Handler_v26_2.this.plugin.getLogger().info("[DEBUG] write(): ClientboundAddEntityPacket direct (hors bundle), uuid=" + uuid
-                        + " receivedUser=" + (receivedUser != null) + " nickedUuid=" + (receivedUser != null ? receivedUser.getNickedUniqueId() : "null"));
                   if (playerUser != null && receivedUser != null && receivedUser.getNickedUniqueId() != null && !playerUser.getBypassNickSet().contains(uuid)) {
-                     ReflectionUtils.setField(addEntityPacketDirect, "uuid", receivedUser.getNickedUniqueId());
-                     Handler_v26_2.this.plugin.getLogger().info("[DEBUG] write(): UUID reecrit (direct) " + uuid + " -> " + receivedUser.getNickedUniqueId() + " pour observateur " + player.getName());
+                     UUID safeUuid = Handler_v26_2.this.resolveSafeUuid(receivedUser.getNickedUniqueId(), uuid);
+                     ReflectionUtils.setField(addEntityPacketDirect, "uuid", safeUuid);
                   }
                }
 
@@ -157,13 +184,11 @@ public class Handler_v26_2 implements VersionHandler {
                               packetValue = receivedUser.getOriginalValue();
                               packetSignature = receivedUser.getOriginalSignature();
                            } else {
-                              packetUniqueId = receivedUser.getNickedUniqueId();
+                              packetUniqueId = Handler_v26_2.this.resolveSafeUuid(receivedUser.getNickedUniqueId(), entry.profileId());
                               packetName = receivedUser.getNickedName();
                               packetValue = receivedUser.getNickedValue();
                               packetSignature = receivedUser.getNickedSignature();
                            }
-                           Handler_v26_2.this.plugin.getLogger().info("[DEBUG] write(): ClientboundPlayerInfoUpdatePacket entry reecrite pour observateur "
-                                 + player.getName() + " : " + entry.profileId() + " -> " + packetUniqueId + " (" + packetName + ")");
 
                            LinkedListMultimap<String, Property> properties = LinkedListMultimap.create();
                            properties.put("textures", new Property("textures", packetValue, packetSignature));
@@ -186,7 +211,6 @@ public class Handler_v26_2 implements VersionHandler {
       };
       ChannelPipeline pipeline = this.pipeline(player);
       pipeline.addBefore("packet_handler", "nickapi", duplexHandler);
-      this.plugin.getLogger().info("[DEBUG] inject(): handler nickapi injecte dans le pipeline de " + player.getName());
    }
 
    public void sendPacket(Player player) {
@@ -198,19 +222,22 @@ public class Handler_v26_2 implements VersionHandler {
          String name;
          String value;
          String signature;
+         UUID displayedUuid;
          if (user.getBypassNickSet().contains(player.getUniqueId())) {
             name = user.getOriginalName();
             value = user.getOriginalValue();
             signature = user.getOriginalSignature();
+            displayedUuid = player.getUniqueId();
          } else {
             name = user.getNickedName();
             value = user.getNickedValue();
             signature = user.getNickedSignature();
+            displayedUuid = this.resolveSafeUuid(user.getNickedUniqueId(), player.getUniqueId());
          }
 
          LinkedListMultimap<String, Property> properties = LinkedListMultimap.create();
          properties.put("textures", new Property("textures", value, signature));
-         GameProfile newProfile = new GameProfile(user.getNickedUniqueId(), name, new PropertyMap(properties));
+         GameProfile newProfile = new GameProfile(displayedUuid, name, new PropertyMap(properties));
 
          EnumSet<Action> enumActions = EnumSet.of(
             Action.ADD_PLAYER, Action.INITIALIZE_CHAT, Action.UPDATE_GAME_MODE,
@@ -232,13 +259,11 @@ public class Handler_v26_2 implements VersionHandler {
          DedicatedPlayerList playerList = ((CraftServer) Bukkit.getServer()).getHandle();
          serverPlayer.connection.send(removeInfoPacket);
          serverPlayer.connection.send(updateInfoPacket);
-         this.plugin.getLogger().info("[DEBUG] sendPacket: entete tab envoyee pour " + player.getName() + " -> uuid affiche=" + user.getNickedUniqueId());
 
          for (Player online : Bukkit.getOnlinePlayers()) {
             if (online != player && online.canSee(player)) {
                online.hidePlayer(this.plugin, player);
                online.showPlayer(this.plugin, player);
-               this.plugin.getLogger().info("[DEBUG] hidePlayer/showPlayer applique pour " + online.getName() + " voyant " + player.getName());
             }
          }
 
@@ -255,7 +280,8 @@ public class Handler_v26_2 implements VersionHandler {
    public void removeCurrentUniqueId(Player player, Player toPlayer) {
       NickUser playerUser = UserHandler.getUser(player.getUniqueId());
       if (playerUser != null) {
-         ((CraftPlayer) toPlayer).getHandle().connection.send(new ClientboundPlayerInfoRemovePacket(Collections.singletonList(playerUser.getNickedUniqueId())));
+         UUID displayedUuid = this.resolveSafeUuid(playerUser.getNickedUniqueId(), player.getUniqueId());
+         ((CraftPlayer) toPlayer).getHandle().connection.send(new ClientboundPlayerInfoRemovePacket(Collections.singletonList(displayedUuid)));
       }
    }
 
