@@ -260,6 +260,17 @@ public class Handler_v26_2 implements VersionHandler {
          serverPlayer.connection.send(removeInfoPacket);
          serverPlayer.connection.send(updateInfoPacket);
 
+         // Le client d'un joueur ne redessine JAMAIS tout seul son propre modele
+         // en vue a la 3e personne (contrairement aux entites des AUTRES joueurs,
+         // qui suivent le tab-list). Un respawn NMS complet est le seul moyen fiable
+         // de forcer le client du joueur deguise a se re-afficher lui-meme avec le
+         // nouveau skin. Cause un court flash d'ecran (identique a un vrai respawn
+         // vanilla) - c'est un effet secondaire connu et attendu de cette technique,
+         // deja present dans la version d'origine (1.21.11). Desormais que la
+         // collision d'UUID est corrigee (voir resolveSafeUuid), ce respawn ne
+         // provoque plus l'invisibilite cote observateurs.
+         playerList.respawn(serverPlayer, true, RemovalReason.CHANGED_DIMENSION, RespawnReason.PLUGIN);
+
          for (Player online : Bukkit.getOnlinePlayers()) {
             if (online != player && online.canSee(player)) {
                online.hidePlayer(this.plugin, player);
