@@ -269,7 +269,19 @@ public class Handler_v26_2 implements VersionHandler {
          // deja present dans la version d'origine (1.21.11). Desormais que la
          // collision d'UUID est corrigee (voir resolveSafeUuid), ce respawn ne
          // provoque plus l'invisibilite cote observateurs.
-         playerList.respawn(serverPlayer, true, RemovalReason.CHANGED_DIMENSION, RespawnReason.PLUGIN);
+         //
+         // Le respawn recalcule en interne un point d'apparition (spawn du monde,
+         // lit, etc.) qui peut deplacer le joueur. On sauvegarde donc sa position
+         // exacte juste avant, et on la restaure juste apres sur l'entite renvoyee
+         // par respawn() (qui remplace l'ancienne instance ServerPlayer), pour que
+         // le joueur reste exactement ou il etait au moment de se (de)deguiser.
+         org.bukkit.Location savedLocation = player.getLocation();
+         ServerPlayer respawnedPlayer = playerList.respawn(serverPlayer, true, RemovalReason.CHANGED_DIMENSION, RespawnReason.PLUGIN);
+         if (respawnedPlayer != null) {
+            respawnedPlayer.getBukkitEntity().teleport(savedLocation);
+         } else {
+            player.teleport(savedLocation);
+         }
 
          for (Player online : Bukkit.getOnlinePlayers()) {
             if (online != player && online.canSee(player)) {
